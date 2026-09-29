@@ -7,7 +7,22 @@ import sqlite3
 import os
 from typing import List, Dict, Any, Optional, Tuple
 
-DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "database.db")
+def _get_db_path() -> str:
+    db_env = os.environ.get("DATABASE_PATH")
+    if db_env:
+        return db_env
+    default_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    try:
+        test_file = os.path.join(default_dir, ".test_write")
+        with open(test_file, "w") as f:
+            f.write("test")
+        os.remove(test_file)
+        return os.path.join(default_dir, "database.db")
+    except (PermissionError, OSError):
+        return "/tmp/securevault_db.sqlite"
+
+
+DB_PATH = _get_db_path()
 
 
 def get_db_connection() -> sqlite3.Connection:

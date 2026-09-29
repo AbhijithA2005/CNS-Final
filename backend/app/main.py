@@ -53,10 +53,12 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 
 @app.exception_handler(Exception)
 async def general_exception_handler(request: Request, exc: Exception):
-    """Catch unhandled exceptions without leaking sensitive internal state or stack traces."""
+    """Catch unhandled exceptions and log them."""
+    import logging
+    logging.exception("Unhandled error processing %s: %s", request.url.path, exc)
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-        content={"success": False, "message": "An unexpected error occurred. Please try again.", "error_code": "INTERNAL_SERVER_ERROR"},
+        content={"success": False, "message": f"Server error: {str(exc)}", "error_code": "INTERNAL_SERVER_ERROR"},
     )
 
 

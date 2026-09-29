@@ -8,14 +8,29 @@ import re
 import uuid
 from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
-UPLOADS_DIR = BASE_DIR / "uploads"
-ENCRYPTED_DIR = BASE_DIR / "encrypted"
-DECRYPTED_DIR = BASE_DIR / "decrypted"
+def _init_storage():
+    data_dir = os.environ.get("DATA_DIR")
+    if data_dir:
+        base = Path(data_dir)
+    else:
+        candidate = Path(__file__).resolve().parent.parent.parent
+        try:
+            test_file = candidate / ".write_test"
+            test_file.write_text("ok")
+            test_file.unlink()
+            base = candidate
+        except (PermissionError, OSError):
+            base = Path("/tmp/securevault_data")
 
-# Ensure runtime directories exist
-for directory in (UPLOADS_DIR, ENCRYPTED_DIR, DECRYPTED_DIR):
-    directory.mkdir(parents=True, exist_ok=True)
+    uploads = base / "uploads"
+    encrypted = base / "encrypted"
+    decrypted = base / "decrypted"
+    for d in (uploads, encrypted, decrypted):
+        d.mkdir(parents=True, exist_ok=True)
+    return base, uploads, encrypted, decrypted
+
+
+BASE_DIR, UPLOADS_DIR, ENCRYPTED_DIR, DECRYPTED_DIR = _init_storage()
 
 
 def sanitize_filename(filename: str) -> str:
