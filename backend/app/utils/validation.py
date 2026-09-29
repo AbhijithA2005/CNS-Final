@@ -44,7 +44,4 @@ def validate_password(password: Optional[str]) -> Tuple[bool, Optional[str]]:
     if not password or len(password.strip()) == 0:
         return False, "Password cannot be empty. Please enter a key or password."
 
-    if len(password) < 4:
-        return False, "Password must be at least 4 characters."
-
     return True, None

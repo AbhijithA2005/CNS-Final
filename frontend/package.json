@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "predev": "npm --prefix cipherlab-browser ci && npm --prefix cipherlab-browser run build",
     "dev": "next dev",
+    "prebuild": "npm --prefix cipherlab-browser ci && npm --prefix cipherlab-browser run build",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"

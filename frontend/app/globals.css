@@ -90,6 +90,15 @@ html, body {
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.securevault-dropzone {
+  background-color: rgba(30, 41, 59, 0.36) !important;
+  border-color: rgba(148, 163, 184, 0.26) !important;
+}
+
+.securevault-dropzone:hover {
+  background-color: rgba(30, 41, 59, 0.5) !important;
+}
+
 /* Animated gradient background mesh */
 .bg-mesh {
   background-image: 
@@ -148,6 +157,55 @@ html.light .text-slate-500 {
   color: #64748b !important;
 }
 
+[data-theme="light"] button.text-white,
+html.light button.text-white {
+  color: #ffffff !important;
+}
+
+[data-theme="light"] [class*="text-blue-"],
+html.light [class*="text-blue-"] {
+  color: #1d4ed8 !important;
+}
+
+[data-theme="light"] [class*="text-cyan-"],
+[data-theme="light"] [class*="text-sky-"],
+html.light [class*="text-cyan-"],
+html.light [class*="text-sky-"] {
+  color: #0e7490 !important;
+}
+
+[data-theme="light"] [class*="text-indigo-"],
+html.light [class*="text-indigo-"] {
+  color: #4338ca !important;
+}
+
+[data-theme="light"] [class*="text-purple-"],
+html.light [class*="text-purple-"] {
+  color: #7e22ce !important;
+}
+
+[data-theme="light"] [class*="text-emerald-"],
+html.light [class*="text-emerald-"],
+[data-theme="light"] [class*="text-green-"],
+html.light [class*="text-green-"] {
+  color: #047857 !important;
+}
+
+[data-theme="light"] [class*="text-pink-"],
+html.light [class*="text-pink-"] {
+  color: #be185d !important;
+}
+
+[data-theme="light"] [class*="text-rose-"],
+html.light [class*="text-rose-"] {
+  color: #be123c !important;
+}
+
+[data-theme="light"] [class*="text-amber-"],
+html.light [class*="text-amber-"] {
+  color: #92400e !important;
+}
+
 /* Header & Navigation */
 [data-theme="light"] header,
 html.light header {
@@ -170,6 +228,78 @@ html.light header nav a {
 [data-theme="light"] header nav a:hover,
 html.light header nav a:hover {
   color: #0f172a !important;
+}
+
+[data-theme="light"] footer a:hover,
+html.light footer a:hover {
+  color: #4338ca !important;
+}
+
+[data-theme="light"] .securevault-dropzone.rounded-3xl.p-8,
+html.light .securevault-dropzone.rounded-3xl.p-8 {
+  background-color: rgba(219, 234, 254, 0.48) !important;
+  border-color: rgba(96, 165, 250, 0.38) !important;
+}
+
+[data-theme="light"] .securevault-dropzone.rounded-3xl.p-8:hover,
+html.light .securevault-dropzone.rounded-3xl.p-8:hover {
+  background-color: rgba(191, 219, 254, 0.58) !important;
+  border-color: rgba(59, 130, 246, 0.52) !important;
+}
+
+[data-theme="dark"] .securevault-dropzone.rounded-3xl.p-8,
+html.dark .securevault-dropzone.rounded-3xl.p-8 {
+  background-color: rgba(15, 23, 42, 0.78) !important;
+  border-color: rgba(148, 163, 184, 0.28) !important;
+}
+
+[data-theme="dark"] .securevault-dropzone.rounded-3xl.p-8:hover,
+html.dark .securevault-dropzone.rounded-3xl.p-8:hover {
+  background-color: rgba(30, 41, 59, 0.88) !important;
+  border-color: rgba(148, 163, 184, 0.4) !important;
+}
+
+[data-theme="dark"] .securevault-dropzone .text-white,
+html.dark .securevault-dropzone .text-white {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .securevault-dropzone .text-slate-400,
+html.dark .securevault-dropzone .text-slate-400 {
+  color: #94a3b8 !important;
+}
+
+[data-theme="light"] .glass-button-secondary,
+html.light .glass-button-secondary {
+  background-color: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.16) !important;
+  color: #334155 !important;
+}
+
+[data-theme="light"] .glass-button-secondary:hover,
+html.light .glass-button-secondary:hover {
+  background-color: #eef2ff !important;
+  border-color: rgba(67, 56, 202, 0.3) !important;
+  color: #312e81 !important;
+}
+
+[data-theme="light"] .glass-button-primary,
+html.light .glass-button-primary {
+  color: #ffffff !important;
+}
+
+[data-theme="light"] .dashboard-secondary-action,
+html.light .dashboard-secondary-action {
+  background-color: #f8fafc !important;
+  border-color: #cbd5e1 !important;
+  color: #334155 !important;
+}
+
+[data-theme="light"] .dashboard-secondary-action:hover,
+html.light .dashboard-secondary-action:hover {
+  background-color: #eef2ff !important;
+  border-color: #a5b4fc !important;
+  color: #312e81 !important;
 }
 
 /* Footer */

@@ -1,18 +1,14 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
 import {
   Shield,
   Download,
   RotateCcw,
   CheckCircle2,
   KeyRound,
-  FileCheck,
   AlertCircle,
-  Hash,
   ShieldCheck,
-  Lock,
 } from "lucide-react";
 import { GlassCard } from "@/components/GlassCard";
 import { GlassButton } from "@/components/GlassButton";
@@ -55,29 +51,29 @@ export default function DecryptPage() {
     setProgressStep(1);
 
     try {
-      // Step 1: Parsing
-      await new Promise((r) => setTimeout(r, 400));
+      // Initiate actual decryption request
+      const decPromise = decryptFileApi(file, password);
+
+      // Animate progress while waiting
+      await new Promise((r) => setTimeout(r, 200));
       setProgressStep(2);
 
-      // Step 2: HMAC Verification
-      await new Promise((r) => setTimeout(r, 450));
+      await new Promise((r) => setTimeout(r, 200));
       setProgressStep(3);
 
-      // Step 3: DES-CBC Decryption
-      await new Promise((r) => setTimeout(r, 450));
+      const decData = await decPromise;
+
       setProgressStep(4);
-
-      // Step 4: Hill Cipher mod 256 Inversion & Decryption
-      await new Promise((r) => setTimeout(r, 450));
+      await new Promise((r) => setTimeout(r, 150));
       setProgressStep(5);
-
-      const decData = await decryptFileApi(file, password);
-      await new Promise((r) => setTimeout(r, 300));
 
       setResult(decData);
       toast("File decrypted successfully! 100% byte fidelity verified.", "success");
-    } catch (err: any) {
-      const msg = err.message || "Decryption failed: invalid key or corrupted file.";
+    } catch (err: unknown) {
+      setProgressStep(0);
+      const msg = err instanceof Error
+        ? err.message
+        : "Decryption failed: invalid key or corrupted file.";
       setError(msg);
       toast(msg, "error");
     } finally {
@@ -94,7 +90,7 @@ export default function DecryptPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="w-full max-w-[1440px] mx-auto space-y-8">
       {/* Header */}
       <div className="text-center space-y-2">
         <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
@@ -208,12 +204,11 @@ export default function DecryptPage() {
                 File Decrypted Successfully
               </h2>
               <p className="text-xs sm:text-sm text-slate-300 max-w-lg mx-auto">
-                HMAC-SHA256 signature verified. DES-CBC padding removed and inverted Hill Cipher transformation applied without errors. Original payload restored.
+                Your original file is ready to download.
               </p>
             </div>
 
-            {/* Metadata Summary */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] space-y-1">
                 <span className="text-xs text-slate-400">Recovered File</span>
                 <p className="font-semibold text-white truncate">{result.original_filename}</p>
@@ -221,32 +216,12 @@ export default function DecryptPage() {
               </div>
 
               <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] space-y-1">
-                <span className="text-xs text-slate-400">Encrypted Container</span>
-                <p className="font-semibold text-purple-300 truncate">{result.stored_filename}</p>
-                <span className="text-xs text-slate-500 font-mono">{formatBytes(result.container_size)}</span>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] space-y-1">
-                <span className="text-xs text-slate-400">Decryption Algorithms</span>
-                <p className="font-semibold text-white">DES + Hill Cipher</p>
-                <span className="text-xs text-slate-500">K⁻¹ mod 256 • CBC</span>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] space-y-1">
-                <span className="text-xs text-slate-400">Integrity Status</span>
+                <span className="text-xs text-slate-400">File Integrity</span>
                 <p className="font-semibold text-emerald-400 flex items-center gap-1">
-                  <ShieldCheck className="w-4 h-4" /> Verified Authenticity
+                  <ShieldCheck className="w-4 h-4" />
+                  {result.integrity_verified ? "Verified" : "Not verified"}
                 </p>
-                <span className="text-xs text-slate-500">Constant-time HMAC check</span>
               </div>
-            </div>
-
-            {/* Checksum */}
-            <div className="p-4 rounded-2xl bg-black/40 border border-white/10 space-y-1 text-xs">
-              <span className="text-slate-400">Recovered SHA-256 Checksum:</span>
-              <p className="font-mono text-emerald-300 break-all select-all font-medium">
-                {result.sha256}
-              </p>
             </div>
 
             {/* Action Buttons */}

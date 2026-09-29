@@ -9,11 +9,7 @@ import {
   CheckCircle2,
   KeyRound,
   Shield,
-  Layers,
-  FileCheck,
-  Hash,
   AlertCircle,
-  Eye,
   Sliders,
 } from "lucide-react";
 import { GlassCard } from "@/components/GlassCard";
@@ -24,7 +20,7 @@ import { FilePreview } from "@/components/FilePreview";
 import { EncryptionPipeline } from "@/components/EncryptionPipeline";
 import { useToast } from "@/components/Toast";
 import { encryptFileApi, checkPasswordStrength, getDownloadUrl } from "@/lib/api";
-import { formatBytes, truncateHash } from "@/lib/utils";
+import { formatBytes } from "@/lib/utils";
 import { EncryptionResult } from "@/types";
 
 export default function EncryptPage() {
@@ -131,9 +127,11 @@ export default function EncryptPage() {
 
       setResult(encData);
       toast("File encrypted successfully!", "success");
-    } catch (err: any) {
-      setError(err.message || "Failed to encrypt file. Please try again.");
-      toast(err.message || "Encryption failed", "error");
+    } catch (err: unknown) {
+      setProgressStep(0);
+      const message = err instanceof Error ? err.message : "Failed to encrypt file. Please try again.";
+      setError(message);
+      toast(message, "error");
     } finally {
       setIsProcessing(false);
     }
@@ -150,7 +148,7 @@ export default function EncryptPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="w-full max-w-[1440px] mx-auto space-y-8">
       {/* Header */}
       <div className="text-center space-y-2">
         <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
@@ -327,12 +325,11 @@ export default function EncryptPage() {
                 File Encrypted Successfully
               </h2>
               <p className="text-xs sm:text-sm text-slate-300 max-w-lg mx-auto">
-                Your file has been transformed with Hill Cipher matrix substitution and DES-CBC block encryption. An HMAC-SHA256 authentication tag has been sealed into the <code className="text-indigo-300 font-mono">.svault</code> container.
+                Your encrypted <code className="text-indigo-300 font-mono">.svault</code> file is ready. It cannot be opened directly; use the Decrypt page with the same password to restore your file.
               </p>
             </div>
 
-            {/* Metadata Summary Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] space-y-1">
                 <span className="text-xs text-slate-400">Original File</span>
                 <p className="font-semibold text-white truncate">{result.original_filename}</p>
@@ -343,63 +340,6 @@ export default function EncryptPage() {
                 <span className="text-xs text-slate-400">Encrypted Container</span>
                 <p className="font-semibold text-indigo-300 truncate">{result.stored_filename}</p>
                 <span className="text-xs text-indigo-400 font-mono">{formatBytes(result.encrypted_size)}</span>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] space-y-1">
-                <span className="text-xs text-slate-400">Algorithms</span>
-                <p className="font-semibold text-white">Hill Cipher + DES</p>
-                <span className="text-xs text-slate-500">CBC Mode • PKCS#7</span>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] space-y-1">
-                <span className="text-xs text-slate-400">Integrity Protection</span>
-                <p className="font-semibold text-emerald-400">HMAC-SHA256</p>
-                <span className="text-xs text-slate-500">Encrypt-then-MAC</span>
-              </div>
-            </div>
-
-            {/* Hill Cipher Viva Metadata Box */}
-            {result.hill_metadata && (
-              <div className="p-5 rounded-2xl bg-black/40 border border-white/10 space-y-3">
-                <div className="flex items-center justify-between border-b border-white/10 pb-2">
-                  <span className="text-xs font-semibold text-slate-300 uppercase tracking-wider">
-                    Hill Cipher Parameters (ℤ₂₅₆)
-                  </span>
-                  <span className="text-xs text-emerald-400 font-medium">Invertible Modulo 256</span>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-mono">
-                  <div>
-                    <span className="text-slate-500 block mb-1">Key Matrix (K):</span>
-                    <span className="text-indigo-300 font-bold">
-                      {JSON.stringify(result.hill_metadata.matrix)}
-                    </span>
-                  </div>
-                  <div>
-                    <span className="text-slate-500 block mb-1">Determinant det(K):</span>
-                    <span className="text-amber-300">
-                      {result.hill_metadata.determinant} (odd, gcd=1)
-                    </span>
-                  </div>
-                  <div>
-                    <span className="text-slate-500 block mb-1">Inverse Matrix (K⁻¹ mod 256):</span>
-                    <span className="text-purple-300">
-                      {JSON.stringify(result.hill_metadata.inverse_matrix)}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* SHA-256 Hash Verification Audit */}
-            <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06] space-y-2 text-xs">
-              <div className="flex items-center justify-between">
-                <span className="text-slate-400">Original File SHA-256 Checksum:</span>
-                <span className="font-mono text-slate-300 select-all">{result.original_sha256}</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-slate-400">Encrypted .svault SHA-256 Checksum:</span>
-                <span className="font-mono text-indigo-300 select-all">{result.encrypted_sha256}</span>
               </div>
             </div>
 
@@ -415,6 +355,17 @@ export default function EncryptPage() {
                   Download Encrypted File (.svault)
                 </GlassButton>
               </a>
+
+              <Link href="/decrypt" className="w-full sm:w-auto">
+                <GlassButton
+                  variant="secondary"
+                  size="lg"
+                  className="w-full sm:w-auto"
+                  icon={<Shield className="w-5 h-5" />}
+                >
+                  Decrypt a File
+                </GlassButton>
+              </Link>
 
               <GlassButton
                 variant="secondary"

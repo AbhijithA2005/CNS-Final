@@ -45,7 +45,14 @@ export function GlassButton({
 
   return (
     <button
-      className={cn(baseStyles, sizeStyles[size], variantStyles[variant], className)}
+      className={cn(
+        baseStyles,
+        sizeStyles[size],
+        variantStyles[variant],
+        variant === "primary" && "glass-button-primary",
+        variant === "secondary" && "glass-button-secondary",
+        className
+      )}
       disabled={disabled || isLoading}
       {...props}
     >

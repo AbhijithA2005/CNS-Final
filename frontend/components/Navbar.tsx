@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Shield, Lock, FileText, Menu, X, CheckCircle2 } from "lucide-react";
+import { Shield, Lock, FileText, Menu, X } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 
 const NAV_LINKS = [
@@ -11,7 +11,7 @@ const NAV_LINKS = [
   { name: "Encrypt", href: "/encrypt" },
   { name: "Decrypt", href: "/decrypt" },
   { name: "History", href: "/history" },
-  { name: "About / Security", href: "/about" },
+  { name: "Algorithm Lab", href: "/algorithm-lab" },
 ];
 
 export function Navbar() {
@@ -20,7 +20,7 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 w-full backdrop-blur-2xl bg-black/40 border-b border-white/[0.08] transition-colors duration-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 2xl:px-12 h-20 flex items-center justify-between">
         
         {/* Brand Logo & Name */}
         <Link href="/" className="flex items-center gap-3.5 group">
@@ -38,10 +38,6 @@ export function Navbar() {
             <div className="flex items-center gap-2">
               <span className="font-semibold text-lg tracking-tight text-white group-hover:text-indigo-200 transition-colors">
                 SecureVault
-              </span>
-              <span className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                Protected
               </span>
             </div>
             <p className="text-[11px] text-slate-400 tracking-wide font-normal">
@@ -70,12 +66,8 @@ export function Navbar() {
           })}
         </nav>
 
-        {/* Right Actions: Status & Theme */}
+        {/* Theme */}
         <div className="hidden md:flex items-center gap-3">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-xs text-slate-300">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-            <span>System Protected</span>
-          </div>
           <ThemeToggle />
         </div>
 
@@ -112,13 +104,6 @@ export function Navbar() {
               </Link>
             );
           })}
-          <div className="pt-2 border-t border-white/[0.08] flex items-center justify-between text-xs text-slate-400 px-2">
-            <span>Security Status</span>
-            <span className="text-emerald-400 flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              Active
-            </span>
-          </div>
         </div>
       )}
     </header>

@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import {
-  FileText,
   Shield,
   Lock,
   Download,
@@ -13,7 +13,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { OperationRecord } from "@/types";
-import { formatBytes, formatDate, truncateHash } from "@/lib/utils";
+import { formatBytes, formatDate } from "@/lib/utils";
 import { GlassButton } from "./GlassButton";
 import { Modal } from "./Modal";
 import { getDownloadUrl } from "@/lib/api";
@@ -137,7 +137,8 @@ export function HistoryTable({ items, isLoading = false }: HistoryTableProps) {
                           href={getDownloadUrl(item.id)}
                           download
                           className="p-2 rounded-xl text-indigo-400 hover:text-indigo-300 hover:bg-indigo-500/10 transition-colors"
-                          title="Download File"
+                          title={isEncrypt ? "Download encrypted .svault container" : "Download recovered original file"}
+                          aria-label={isEncrypt ? "Download encrypted .svault container" : "Download recovered original file"}
                         >
                           <Download className="w-4 h-4" />
                         </a>
@@ -207,10 +208,27 @@ export function HistoryTable({ items, isLoading = false }: HistoryTableProps) {
       <Modal
         isOpen={!!selectedOp}
         onClose={() => setSelectedOp(null)}
-        title="Cryptographic Operation Audit Record"
+        title={selectedOp?.operation === "ENCRYPT" ? "Encryption Details" : "Decryption Details"}
       >
         {selectedOp && (
           <div className="space-y-6 text-sm">
+            <div className="flex items-start justify-between gap-4 rounded-2xl border border-white/[0.08] bg-white/[0.03] p-4">
+              <div className="min-w-0">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+                  {selectedOp.operation === "ENCRYPT" ? "Encrypted file" : "Recovered file"}
+                </p>
+                <p className="mt-1 truncate font-semibold text-white">{selectedOp.original_filename}</p>
+                <p className="mt-1 text-xs text-slate-400">{selectedOp.algorithm}</p>
+              </div>
+              <span className={`shrink-0 rounded-full px-2.5 py-1 text-[10px] font-semibold ${
+                selectedOp.status === "SUCCESS"
+                  ? "bg-emerald-500/10 text-emerald-400"
+                  : "bg-rose-500/10 text-rose-400"
+              }`}>
+                {selectedOp.status}
+              </span>
+            </div>
+
             <div className="grid grid-cols-2 gap-4 p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08]">
               <div>
                 <p className="text-xs text-slate-400">Operation ID</p>
@@ -229,11 +247,6 @@ export function HistoryTable({ items, isLoading = false }: HistoryTableProps) {
               </div>
 
               <div className="flex items-center justify-between py-2 border-b border-white/[0.06]">
-                <span className="text-slate-400">Internal Storage Filename</span>
-                <span className="font-mono text-xs text-slate-300 truncate max-w-[280px]">{selectedOp.stored_filename}</span>
-              </div>
-
-              <div className="flex items-center justify-between py-2 border-b border-white/[0.06]">
                 <span className="text-slate-400">Operation Type</span>
                 <span className="font-semibold text-indigo-400">{selectedOp.operation}</span>
               </div>
@@ -244,12 +257,16 @@ export function HistoryTable({ items, isLoading = false }: HistoryTableProps) {
               </div>
 
               <div className="flex items-center justify-between py-2 border-b border-white/[0.06]">
-                <span className="text-slate-400">Original Payload Size</span>
+                <span className="text-slate-400">
+                  {selectedOp.operation === "ENCRYPT" ? "Original File Size" : "Encrypted Container Size"}
+                </span>
                 <span className="font-mono text-white">{formatBytes(selectedOp.original_size)}</span>
               </div>
 
               <div className="flex items-center justify-between py-2 border-b border-white/[0.06]">
-                <span className="text-slate-400">Output Container Size</span>
+                <span className="text-slate-400">
+                  {selectedOp.operation === "ENCRYPT" ? "Encrypted Container Size" : "Recovered File Size"}
+                </span>
                 <span className="font-mono text-white">{formatBytes(selectedOp.output_size)}</span>
               </div>
 
@@ -278,16 +295,26 @@ export function HistoryTable({ items, isLoading = false }: HistoryTableProps) {
             </div>
 
             {selectedOp.status === "SUCCESS" && (
-              <div className="pt-2 flex justify-end gap-3">
+              <div className="pt-2 flex flex-col sm:flex-row sm:items-center sm:justify-end gap-3">
+                {selectedOp.operation === "ENCRYPT" && (
+                  <p className="text-xs text-slate-400 sm:mr-auto">
+                    Encrypted .svault files are not opened directly. Use Decrypt with the same password.
+                  </p>
+                )}
                 <a
                   href={getDownloadUrl(selectedOp.id)}
                   download
                   className="w-full sm:w-auto"
                 >
                   <GlassButton variant="primary" icon={<Download className="w-4 h-4" />}>
-                    Download Recovered File
+                    {selectedOp.operation === "ENCRYPT" ? "Download Encrypted File (.svault)" : "Download Original File"}
                   </GlassButton>
                 </a>
+                {selectedOp.operation === "ENCRYPT" && (
+                  <Link href="/decrypt" className="text-sm font-medium text-indigo-400 hover:text-indigo-300 transition-colors">
+                    Decrypt in SecureVault
+                  </Link>
+                )}
               </div>
             )}
           </div>

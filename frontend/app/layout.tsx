@@ -35,7 +35,7 @@ export default function RootLayout({
           <Navbar />
 
           {/* Main Content Viewport */}
-          <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+          <main className="flex-1 w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 2xl:px-12 py-6 sm:py-8 lg:py-10">
             {children}
           </main>
 

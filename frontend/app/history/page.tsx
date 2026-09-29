@@ -45,8 +45,23 @@ export default function HistoryPage() {
   };
 
   useEffect(() => {
-    loadData(1, operationFilter, statusFilter, search);
-  }, [operationFilter, statusFilter]);
+    let cancelled = false;
+    fetchHistory({ page: 1, limit: 10 })
+      .then((res) => {
+        if (cancelled) return;
+        setItems(res.items);
+        setTotal(res.total);
+        setPage(res.page);
+        setTotalPages(res.total_pages);
+      })
+      .catch((err: unknown) => console.error("Failed to load history:", err))
+      .finally(() => {
+        if (!cancelled) setIsLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,7 +69,7 @@ export default function HistoryPage() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8">
+    <div className="w-full max-w-[1600px] mx-auto space-y-8">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -95,7 +110,10 @@ export default function HistoryPage() {
             {["ALL", "ENCRYPT", "DECRYPT"].map((op) => (
               <button
                 key={op}
-                onClick={() => setOperationFilter(op)}
+                onClick={() => {
+                  setOperationFilter(op);
+                  loadData(1, op, statusFilter, search);
+                }}
                 className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
                   operationFilter === op
                     ? "bg-white/10 text-white shadow-sm border border-white/15"
@@ -112,7 +130,10 @@ export default function HistoryPage() {
             {["ALL", "SUCCESS", "FAILED"].map((st) => (
               <button
                 key={st}
-                onClick={() => setStatusFilter(st)}
+                onClick={() => {
+                  setStatusFilter(st);
+                  loadData(1, operationFilter, st, search);
+                }}
                 className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
                   statusFilter === st
                     ? "bg-white/10 text-white shadow-sm border border-white/15"

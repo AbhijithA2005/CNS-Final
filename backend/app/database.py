@@ -101,8 +101,8 @@ def get_operations(
         params.append(status_filter.upper())
 
     if search:
-        query += " AND (original_filename LIKE ? OR stored_filename LIKE ?)"
-        params.extend([f"%{search}%", f"%{search}%"])
+        query += " AND (original_filename LIKE ? OR stored_filename LIKE ? OR sha256 LIKE ?)"
+        params.extend([f"%{search}%", f"%{search}%", f"%{search}%"])
 
     query += " ORDER BY created_at DESC LIMIT ? OFFSET ?"
     params.extend([limit, offset])
@@ -121,8 +121,8 @@ def get_operations(
         count_query += " AND UPPER(status) = ?"
         count_params.append(status_filter.upper())
     if search:
-        count_query += " AND (original_filename LIKE ? OR stored_filename LIKE ?)"
-        count_params.extend([f"%{search}%", f"%{search}%"])
+        count_query += " AND (original_filename LIKE ? OR stored_filename LIKE ? OR sha256 LIKE ?)"
+        count_params.extend([f"%{search}%", f"%{search}%", f"%{search}%"])
 
     cursor.execute(count_query, count_params)
     total = cursor.fetchone()[0]

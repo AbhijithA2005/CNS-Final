@@ -20,25 +20,23 @@ interface FilePreviewProps {
   isEncryptedFormat?: boolean;
 }
 
+function renderFileIcon(ext: string): React.ReactNode {
+  if (ext === "svault") return <Shield className="w-6 h-6" />;
+  if (["zip", "tar", "gz", "7z", "rar"].includes(ext)) return <FileArchive className="w-6 h-6" />;
+  if (["png", "jpg", "jpeg", "gif", "webp", "svg"].includes(ext)) return <ImageIcon className="w-6 h-6" />;
+  if (["pdf", "doc", "docx", "txt", "md"].includes(ext)) return <FileText className="w-6 h-6" />;
+  if (["py", "ts", "js", "html", "css", "json", "c", "cpp"].includes(ext)) return <FileCode className="w-6 h-6" />;
+  return <File className="w-6 h-6" />;
+}
+
 export function FilePreview({ file, onRemove, isEncryptedFormat = false }: FilePreviewProps) {
   const ext = file.name.split(".").pop()?.toLowerCase() || "";
-
-  const getIcon = () => {
-    if (ext === "svault") return Shield;
-    if (["zip", "tar", "gz", "7z", "rar"].includes(ext)) return FileArchive;
-    if (["png", "jpg", "jpeg", "gif", "webp", "svg"].includes(ext)) return ImageIcon;
-    if (["pdf", "doc", "docx", "txt", "md"].includes(ext)) return FileText;
-    if (["py", "ts", "js", "html", "css", "json", "c", "cpp"].includes(ext)) return FileCode;
-    return File;
-  };
-
-  const Icon = getIcon();
 
   return (
     <GlassCard className="p-4 flex items-center justify-between border-indigo-500/30 bg-indigo-500/[0.03]">
       <div className="flex items-center gap-3.5 min-w-0">
         <div className="p-3 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 shrink-0">
-          <Icon className="w-6 h-6" />
+          {renderFileIcon(ext)}
         </div>
 
         <div className="min-w-0 space-y-0.5">

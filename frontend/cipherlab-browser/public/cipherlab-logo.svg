@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">CipherLab logo</title>
+  <desc id="desc">A cyan and indigo shield containing a matrix and binary mark.</desc>
+  <rect width="512" height="512" fill="#ffffff"/>
+  <path d="M256 54 410 112v119c0 105-64 180-154 227-90-47-154-122-154-227V112z" fill="#101b32" stroke="#31d7f5" stroke-width="14"/>
+  <path d="M256 92 371 135v96c0 77-43 137-115 181-72-44-115-104-115-181v-96z" fill="#17203a" stroke="#6c5cff" stroke-width="5"/>
+  <g fill="none" stroke="#31d7f5" stroke-width="8" stroke-linecap="round">
+    <path d="M190 168h132M190 222h132M190 276h132"/>
+    <path d="M212 146v154M256 146v154M300 146v154"/>
+  </g>
+  <g fill="#27d69b">
+    <circle cx="212" cy="168" r="7"/><circle cx="256" cy="222" r="7"/><circle cx="300" cy="276" r="7"/>
+  </g>
+  <text x="256" y="356" text-anchor="middle" fill="#f7faff" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700" letter-spacing="4">CIPHERLAB</text>
+</svg>

@@ -29,11 +29,13 @@ export function useTheme() {
   };
 
   useEffect(() => {
-    setMounted(true);
     const saved = localStorage.getItem("securevault_theme") as Theme | null;
     const initialTheme: Theme = saved === "light" || saved === "dark" ? saved : "dark";
-    setTheme(initialTheme);
     applyTheme(initialTheme);
+    Promise.resolve().then(() => {
+      setMounted(true);
+      setTheme(initialTheme);
+    });
   }, []);
 
   const toggleTheme = () => {

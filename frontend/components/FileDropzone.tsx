@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { UploadCloud, File, FileArchive, FileText, Image as ImageIcon, Music, Video } from "lucide-react";
+import { UploadCloud } from "lucide-react";
 import { formatBytes } from "@/lib/utils";
 
 interface FileDropzoneProps {
@@ -68,10 +68,10 @@ export function FileDropzone({
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         onClick={() => fileInputRef.current?.click()}
-        className={`relative cursor-pointer rounded-3xl p-8 sm:p-12 text-center transition-all duration-300 border-2 border-dashed ${
+        className={`securevault-dropzone relative cursor-pointer rounded-3xl p-8 sm:p-12 text-center transition-all duration-300 border-2 border-dashed ${
           isDragOver
             ? "border-indigo-500 bg-indigo-500/10 scale-[1.01]"
-            : "border-white/15 bg-white/[0.03] hover:border-white/30 hover:bg-white/[0.05]"
+            : "border-slate-400/35 bg-slate-900/60 hover:border-slate-300/50 hover:bg-slate-800/70"
         } backdrop-blur-2xl group`}
       >
         <input

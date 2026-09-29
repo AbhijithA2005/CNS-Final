@@ -89,6 +89,16 @@ def test_api_encrypt_decrypt_download_flow():
     assert hist_res.status_code == 200
     assert hist_res.json()["data"]["total"] >= 2
 
+    hash_res = client.get(
+        "/api/history",
+        params={"search": enc_json["data"]["encrypted_sha256"]},
+    )
+    assert hash_res.status_code == 200
+    assert any(
+        operation["id"] == op_id
+        for operation in hash_res.json()["data"]["items"]
+    )
+
     stats_res = client.get("/api/stats")
     assert stats_res.status_code == 200
     assert stats_res.json()["data"]["files_processed"] >= 2
