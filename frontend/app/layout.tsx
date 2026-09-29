@@ -3,6 +3,7 @@ import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ToastProvider } from "@/components/Toast";
+import { PortGuard } from "@/components/PortGuard";
 
 export const metadata: Metadata = {
   title: "SecureVault | Layered Cryptographic File Sharing System",
@@ -27,6 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en" data-theme="dark" className="dark" suppressHydrationWarning>
       <body className="min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white transition-colors duration-300">
+        <PortGuard />
         <ToastProvider>
           {/* Subtle Ambient Background Mesh */}
           <div className="fixed inset-0 pointer-events-none bg-mesh -z-10" />

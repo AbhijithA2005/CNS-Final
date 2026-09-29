@@ -49,7 +49,7 @@ async function requestData<T>(path: string, init?: RequestInit): Promise<T> {
   } catch (error) {
     if (error instanceof TypeError) {
       throw new Error(
-        "Could not reach the SecureVault API. Start the app with ./start.sh from the project folder, then retry."
+        `Could not reach the SecureVault API. Make sure you are on http://localhost:3000 (not just localhost) and that ./start.sh is running.`
       );
     }
     throw error;
