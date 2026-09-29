@@ -1,6 +1,4 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "npm --prefix cipherlab-browser ci && npm --prefix cipherlab-browser run build && next build",
-  "installCommand": "npm install",
   "framework": "nextjs"
 }
