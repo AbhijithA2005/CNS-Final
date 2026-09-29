@@ -1,0 +1,3 @@
+SecureVault demonstration file.
+Layered Cryptography: Hill Cipher (mod 256) + DES (CBC Mode) + HMAC-SHA256 Authenticated Container.
+Academic Project Demonstration for Computer Network Security.
