@@ -61,10 +61,15 @@ async def download_file_endpoint(op_id: str):
             detail="The requested file is no longer available on the server",
         )
 
+    from urllib.parse import quote
+    safe_name = quote(download_name, safe="")
     return FileResponse(
         path=file_path,
         filename=download_name,
         media_type="application/octet-stream",
+        headers={
+            "Content-Disposition": f"attachment; filename=\"{download_name}\"; filename*=UTF-8''{safe_name}",
+        },
     )
 
 
