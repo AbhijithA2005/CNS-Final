@@ -42,10 +42,18 @@ export interface MatrixValidationResult {
   explanation: string;
 }
 
+function getBaseUrl(): string {
+  if (process.env.NODE_ENV === "development" && typeof window !== "undefined") {
+    return `${window.location.protocol}//${window.location.hostname}:8000`;
+  }
+  return "";
+}
+
 async function requestData<T>(path: string, init?: RequestInit): Promise<T> {
+  const fullPath = getBaseUrl() + path;
   let response: Response;
   try {
-    response = await fetch(path, init);
+    response = await fetch(fullPath, init);
   } catch (error) {
     if (error instanceof TypeError) {
       throw new Error(
@@ -127,5 +135,5 @@ export function fetchHistory(options: HistoryOptions = {}): Promise<HistoryPage>
 }
 
 export function getDownloadUrl(operationId: string): string {
-  return `/api/download/${encodeURIComponent(operationId)}`;
+  return `${getBaseUrl()}/api/download/${encodeURIComponent(operationId)}`;
 }
