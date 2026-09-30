@@ -42,25 +42,15 @@ export interface MatrixValidationResult {
   explanation: string;
 }
 
-function getBaseUrl(): string {
-  if (process.env.NODE_ENV === "development" && typeof window !== "undefined") {
-    return `${window.location.protocol}//${window.location.hostname}:8000`;
-  }
-  return "";
-}
-
 async function requestData<T>(path: string, init?: RequestInit): Promise<T> {
-  const fullPath = getBaseUrl() + path;
   let response: Response;
   try {
-    response = await fetch(fullPath, init);
+    response = await fetch(path, init);
   } catch (error) {
-    if (error instanceof TypeError) {
-      throw new Error(
-        `Could not reach the SecureVault API. Make sure you are on http://localhost:3000 (not just localhost) and that ./start.sh is running.`
-      );
-    }
-    throw error;
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    throw new Error(
+      `Could not reach the SecureVault API (${errorMsg}). Make sure the backend is running via ./start.sh.`
+    );
   }
 
   const body = await response.json().catch(() => null) as
@@ -135,5 +125,5 @@ export function fetchHistory(options: HistoryOptions = {}): Promise<HistoryPage>
 }
 
 export function getDownloadUrl(operationId: string): string {
-  return `${getBaseUrl()}/api/download/${encodeURIComponent(operationId)}`;
+  return `/api/download/${encodeURIComponent(operationId)}`;
 }

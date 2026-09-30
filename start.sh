@@ -24,8 +24,8 @@ lsof -ti:8000 | xargs kill -9 2>/dev/null || true
 lsof -ti:3000 | xargs kill -9 2>/dev/null || true
 
 # 1. Start FastAPI Backend in background
-echo "[*] Launching FastAPI Backend on http://127.0.0.1:8000..."
-PYTHONPATH=backend python3 -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload &
+echo "[*] Launching FastAPI Backend on port 8000..."
+PYTHONPATH=backend python3 -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload &
 BACKEND_PID=$!
 
 # Wait for backend health check

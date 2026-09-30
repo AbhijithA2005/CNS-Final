@@ -51,20 +51,20 @@ export default function DecryptPage() {
     setProgressStep(1);
 
     try {
-      // Initiate actual decryption request
-      const decPromise = decryptFileApi(file, password);
-
-      // Animate progress while waiting
-      await new Promise((r) => setTimeout(r, 200));
+      // Step 1: Parsing Container & Salt Extraction
+      await new Promise((r) => setTimeout(r, 300));
       setProgressStep(2);
 
-      await new Promise((r) => setTimeout(r, 200));
+      // Step 2: Authenticating HMAC-SHA256 Tag
+      await new Promise((r) => setTimeout(r, 350));
       setProgressStep(3);
 
-      const decData = await decPromise;
+      // Execute actual decryption request
+      const decData = await decryptFileApi(file, password);
 
+      // Step 3 & 4: DES-CBC unpadding and Hill Cipher invert
       setProgressStep(4);
-      await new Promise((r) => setTimeout(r, 150));
+      await new Promise((r) => setTimeout(r, 250));
       setProgressStep(5);
 
       setResult(decData);
